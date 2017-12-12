@@ -25,5 +25,8 @@ module.exports = {
     globalComponentContacts: 'global-component-contacts/',
     releaseComponentContacts: 'release-component-contacts/',
   },
+
+  // Default page size - affects number of items in the data table.
+  default_page_size: 20,
 }
 

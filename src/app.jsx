@@ -154,7 +154,7 @@ module.exports = React.createClass({
       url: null,
       params: params,
       page: 1,
-      page_size: 10,
+      page_size: common.default_page_size,
       busy: busy,
       error: {},
       showresult: false,
