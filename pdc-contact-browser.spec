@@ -32,8 +32,9 @@ cp serversetting.json %{buildroot}/var/www/html/%{name}
 - new package built with tito
 - fix bugs
 - add assets for packaging
+
 * Wed Aug 10 2016 Chuang Zhang <chuzhang@redhat.com> 1.1.0-1
-- Change README.markdown and remove Makefile.    
+- Change README.markdown and remove Makefile.
 - Improve the styles of contact browser
 - Replace old jquery syntax with new one
 - Remove redundant props passing
