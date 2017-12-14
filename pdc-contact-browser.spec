@@ -1,5 +1,5 @@
 Name:           pdc-contact-browser
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Web UI for pdc's contact
 Group:          Development/Libraries
@@ -15,21 +15,20 @@ Web UI for viewing pdc contact
 %setup -q -n %{name}-%{version}
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}/var/www/html/%{name}
-cp -R assets %{buildroot}/var/www/html/%{name}
-cp -R css %{buildroot}/var/www/html/%{name}
-cp -R src %{buildroot}/var/www/html/%{name}
-cp index.html %{buildroot}/var/www/html/%{name}
-cp serversetting.json %{buildroot}/var/www/html/%{name}
+cp -R var/ %{buildroot}/
 
 %files
 %defattr(-,root,root)
 /var/www/html/%{name}
 
 %changelog
+* Thu Dec 22 2016 Chuang Zhang <chuzhang@redhat.com> 1.2.0-1
+- new package built with tito
+- fix bugs
+- add assets for packaging
+
 * Wed Aug 10 2016 Chuang Zhang <chuzhang@redhat.com> 1.1.0-1
-- Change README.markdown and remove Makefile.    
+- Change README.markdown and remove Makefile.
 - Improve the styles of contact browser
 - Replace old jquery syntax with new one
 - Remove redundant props passing
