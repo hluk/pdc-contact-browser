@@ -123,7 +123,7 @@ module.exports = React.createClass({
 
     if (cached_contacts) {
       try {
-        contacts = JSON.parse(cached_mailinglists);
+        contacts = JSON.parse(cached_contacts);
         contact_spinning = false;
       } catch (e) {
       }
