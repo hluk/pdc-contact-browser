@@ -260,7 +260,7 @@ module.exports = React.createClass({
     var param = { 'page_size': -1 };
     var Url = localStorage.getItem('server');
     $.when(
-      $.getJSON(Url + "releases/", param)
+      $.getJSON(Url + "releases/", Object.assign(param, {fields: 'release_id'}))
         .done(function (response) {
           for (var idx in response) {
             releases.push(response[idx].release_id)
@@ -269,7 +269,7 @@ module.exports = React.createClass({
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'releases/';
         }),
-      $.getJSON(Url + "contact-roles/", param)
+      $.getJSON(Url + "contact-roles/", Object.assign(param, {fields: 'name'}))
         .done(function (response) {
           for (var idx in response) {
             roles.push(response[idx].name);
@@ -278,16 +278,20 @@ module.exports = React.createClass({
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contact-roles/';
         }),
-      $.getJSON(Url + "contacts/mailing-lists/", param)
+      $.getJSON(Url + "contacts/mailing-lists/", Object.assign(param, {fields: 'email'}))
         .done(function (response) {
-          mailinglists = response;
+          for (var idx in response) {
+            mailinglists.push(response[idx].email);
+          }
         })
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contacts/mailing-lists/';
         }),
-      $.getJSON(Url + "contacts/people/", param)
+      $.getJSON(Url + "contacts/people/", Object.assign(param, {fields: 'email'}))
         .done(function (response) {
-          people = response;
+          for (var idx in response) {
+            people.push(response[idx].email);
+          }
         })
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contacts/people/';
