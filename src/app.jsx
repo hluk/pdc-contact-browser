@@ -278,20 +278,16 @@ module.exports = React.createClass({
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contact-roles/';
         }),
-      $.getJSON(Url + "contacts/mailing-lists/", Object.assign(param, {fields: 'email'}))
+      $.getJSON(Url + "contacts/mailing-lists/", Object.assign(param, {fields: 'email,mail_name'}))
         .done(function (response) {
-          for (var idx in response) {
-            mailinglists.push(response[idx].email);
-          }
+          mailinglists = response;
         })
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contacts/mailing-lists/';
         }),
-      $.getJSON(Url + "contacts/people/", Object.assign(param, {fields: 'email'}))
+      $.getJSON(Url + "contacts/people/", Object.assign(param, {fields: 'email,username'}))
         .done(function (response) {
-          for (var idx in response) {
-            people.push(response[idx].email);
-          }
+          people = response;
         })
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contacts/people/';

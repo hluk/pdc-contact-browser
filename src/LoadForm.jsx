@@ -53,6 +53,7 @@ module.exports = React.createClass({
     // Sorted list of mailing-list and personal e-mails (duplicates removed).
     var contactList = (this.props.contacts.mail || [])
           .concat(this.props.contacts.people || [])
+          .map(function(obj) { return obj.email; })
           .sort()
           .filter(function(contact, index, list) { return contact !== list[index + 1]; })
           .map(function(contact) { return { 'value': contact, 'label': contact }; });
