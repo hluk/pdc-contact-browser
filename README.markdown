@@ -50,3 +50,8 @@ the inner list is a URL, the second is a link label.
     ]
 }
 ```
+
+A custom footer can be set in `templates/footer.html` file. The file should
+contain single HTML element with class name "footer" which will be rendered at
+bottom of the web page. An optional element with class name "version" can be
+used as placeholder for current application version.

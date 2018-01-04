@@ -9,6 +9,7 @@ var Row = ReactBootstrap.Row;
 var HeaderLinks = require('./HeaderLinks.jsx');
 var NetworkErrorDialog = require('./NetworkErrorDialog.jsx');
 var NewContactDialog = require('./NewContactDialog.jsx');
+var Footer = require('./Footer.jsx');
 
 module.exports = React.createClass({
     getInitialState() {
@@ -54,6 +55,7 @@ module.exports = React.createClass({
                 onClose={this.hideNewContactDialog}
                 onCreateNewContact={this.props.onCreateNewContact} />
           </div>
+          <Footer />
         </div>
     }
 });

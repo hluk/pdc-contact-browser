@@ -24,6 +24,9 @@ module.exports = {
         warnings: false
       }
     }),
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version)
+    }),
     new ExtractTextPlugin('bundle.min.css', { allChunks: true })
   ],
   module: {

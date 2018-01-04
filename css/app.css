@@ -1,10 +1,24 @@
 html, body {
-  height: 100%;
   padding: 0;
   margin: 0;
 }
 h2 button {
     margin-left: 2em;
+}
+/* footer */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    padding-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    text-align: center;
 }
 /* menu text color */
 .navbar-default .navbar-nav > li > a {

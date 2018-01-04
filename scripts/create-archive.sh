@@ -12,6 +12,7 @@ install_files=(
     assets
     css
     src
+    templates
     index.html
 )
 
