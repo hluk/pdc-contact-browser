@@ -13,8 +13,9 @@ install_files=(
     css
     src
     index.html
-    serversetting.json
 )
+
+config_file="serversetting.json"
 
 clean() {
     rm -Rf "$archive_basename"
@@ -26,6 +27,7 @@ rm -f "$archive"
 
 mkdir -p "$root_dir"
 cp -Rv "${install_files[@]}" "$root_dir"
+cp -v "$config_file.dist" "$root_dir/$config_file"
 
 tar czf "$archive" "$archive_basename"
 echo "Created archive: $archive"

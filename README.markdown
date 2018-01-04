@@ -6,8 +6,8 @@ contacts for components.
 
 # Usage
 
-Set up your server url in serversetting.json, then enjoy.
-
+Set up PDC server and other options in `serversetting.json` (template is
+`serversetting.json.dist`), then enjoy.
 
 # Development
 

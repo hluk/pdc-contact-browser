@@ -4,3 +4,4 @@ dist/
 assets/
 *.swp
 .todo
+serversetting.json

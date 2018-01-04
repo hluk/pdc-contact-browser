@@ -1,0 +1,9 @@
+{
+"server": "https://pdc.example.com/rest_api/v1/",
+"logo": "/pdc-contact-browser/logo.png",
+"customStyle": "/pdc-contact-browser/style.css",
+"links": [
+    ["https://github.com/release-engineering/product-definition-center/issues", "Report an Issue"],
+    ["https://github.com/release-engineering/product-definition-center", "View on GitHub"]
+]
+}
