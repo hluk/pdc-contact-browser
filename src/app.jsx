@@ -3,8 +3,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactBootstrap = require('react-bootstrap');
-var Navbar = ReactBootstrap.Navbar;
-var Row = ReactBootstrap.Row;
 var Col = ReactBootstrap.Col;
 var $ = require('jquery');
 
@@ -13,9 +11,9 @@ var LoadForm = require('./LoadForm.jsx');
 var TableToolbar = require('./TableToolbar.jsx');
 var Browser = require('./Browser.jsx');
 var Pager = require('./Pager.jsx');
-var HeaderLinks = require('./HeaderLinks.jsx');
-var NetworkErrorDialog = require('./NetworkErrorDialog.jsx');
 var classNames = require('classnames');
+
+var Layout = require('./Layout.jsx');
 
 // Makes asynchronous requests to get results from given resources.
 function fetchResults(app, data, resources, results = [], count = 0, showResults = true) {
@@ -319,6 +317,12 @@ module.exports = React.createClass({
       }
     });
   },
+  addContact: function (type, contact) {
+    let contacts = Object.assign({}, this.state.contacts);
+    contacts[type === 'maillist' ? 'mail' : 'people'].push(contact);
+    this.setState({contacts: contacts});
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  },
   displayError: function (url, method, xhr, status, err) {
     console.log(url, status, err);
     this.setState({
@@ -443,41 +447,22 @@ module.exports = React.createClass({
           style = <link rel="stylesheet" type="text/css" href={this.state.customStyle} />;
       }
       return (
-        <div>
-          {style}
-          <nav className="navbar navbar-pf navbar-default">
-            <Navbar.Header>
-              <Navbar.Brand>
-                {logo}
-                Product Definition Center &mdash; Contact Browser
-              </Navbar.Brand>
-            </Navbar.Header>
-            <div className="navbar-collapse collapse">
-                <HeaderLinks links={this.state.links} />
-                <ul className="nav navbar-nav navbar-primary">
-                    <li><a href="/">Contact Browser</a></li>
-                </ul>
-            </div>
-          </nav>
-          <div className="container-fluid wrapper">
-            <Row className="layout">
-              <Col md={3} className="leftCol">
-                <LoadForm releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts} release_spinning={this.state.release_spinning} role_spinning={this.state.role_spinning} contact_spinning={this.state.contact_spinning} params={this.state.params} resource={this.state.resource} onSubmit={this.handleFormSubmit} inputChange={this.handleInputChange}/>
-              </Col>
-              <Col md={9} className="rightCol">
-                <TableToolbar showresult={this.state.showresult} releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts}
-                  selectedContact={this.state.selectedContact} clearSelectedContact={this.clearSelectedContact}/>
-                <div id="browser-wrapper">
-                  <i className={browserSpinnerClass}></i>
-                  <Browser id="erer" data={this.state.data} showresult={this.state.showresult} onSelectContact={this.onSelectContact}/>
-                </div>
-                <Pager count={this.state.count} showresult={this.state.showresult} page={this.state.page} page_size={this.state.page_size} onPageChange={this.handlePageChange} reloadPage={this.loadData} />
-              </Col>
-            </Row>
-            <div className={overlayClass}></div>
-            <NetworkErrorDialog ref='errorDialog' data={this.state.error} />
-          </div>
-        </div>
+          <Layout style={style} logo={logo} links={this.state.links}
+              overlayClass={overlayClass} error={this.state.error}
+              onCreateNewContact={this.addContact}>
+           <Col md={3} className="leftCol">
+             <LoadForm releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts} release_spinning={this.state.release_spinning} role_spinning={this.state.role_spinning} contact_spinning={this.state.contact_spinning} params={this.state.params} resource={this.state.resource} onSubmit={this.handleFormSubmit} inputChange={this.handleInputChange}/>
+           </Col>
+           <Col md={9} className="rightCol">
+             <TableToolbar showresult={this.state.showresult} releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts}
+               selectedContact={this.state.selectedContact} clearSelectedContact={this.clearSelectedContact}/>
+             <div id="browser-wrapper">
+               <i className={browserSpinnerClass}></i>
+               <Browser id="erer" data={this.state.data} showresult={this.state.showresult} onSelectContact={this.onSelectContact}/>
+             </div>
+             <Pager count={this.state.count} showresult={this.state.showresult} page={this.state.page} page_size={this.state.page_size} onPageChange={this.handlePageChange} reloadPage={this.loadData} />
+           </Col>
+        </Layout>
       );
     }
 });
