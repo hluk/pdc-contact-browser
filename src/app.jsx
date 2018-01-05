@@ -182,11 +182,12 @@ module.exports = React.createClass({
     });
     $.getJSON("serversetting.json", function( data ) {
       localStorage.setItem('server', data['server']);
-      self.state.logo = data['logo'] || null;
-      self.state.customStyle = data['customStyle'] || null;
-      self.state.links = data.links;
-      self.state.url = data['server'];
-      handleData();
+      self.setState({
+        logo: data['logo'] || null,
+        customStyle: data['customStyle'] || null,
+        links: data.links,
+        url: data['server'],
+      }, handleData);
     });
     function handleData() {
       var token = localStorage.getItem('token');
