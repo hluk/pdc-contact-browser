@@ -91,7 +91,7 @@ module.exports = React.createClass({
         return (
             <Modal show={this.props.show} onHide={this.close} backdrop="static">
                 <Modal.Header closeButton>
-                    <Modal.Title>Create new contact</Modal.Title>
+                    <Modal.Title>Create New Contact</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 

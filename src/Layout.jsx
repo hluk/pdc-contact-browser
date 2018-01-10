@@ -41,7 +41,7 @@ module.exports = React.createClass({
                 <HeaderLinks links={this.props.links} />
                 <ul className="nav navbar-nav navbar-primary">
                     <li><a href="/">Contact Browser</a></li>
-                    <li><a href="#" onClick={this.displayNewContactDialog}>Create new contact</a></li>
+                    <li><a href="#" onClick={this.displayNewContactDialog}>Create New Contact</a></li>
                 </ul>
             </div>
           </nav>
