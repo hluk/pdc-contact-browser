@@ -319,7 +319,7 @@ module.exports = React.createClass({
   },
   addContact: function (type, contact) {
     let contacts = Object.assign({}, this.state.contacts);
-    contacts[type === 'maillist' ? 'mail' : 'people'].push(contact);
+    contacts[type === common.contactType.mailingList ? 'mail' : 'people'].push(contact);
     this.setState({contacts: contacts});
     localStorage.setItem('contacts', JSON.stringify(contacts));
   },

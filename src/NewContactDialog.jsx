@@ -37,7 +37,7 @@ module.exports = React.createClass({
             return;
         }
         this.setState({message: 'Creating contact …', msg_type: 'Notice'});
-        const name_key = this.state.type === 'people' ? 'username' : 'mail_name';
+        const name_key = this.state.type === common.contactType.person ? 'username' : 'mail_name';
         const data = {
             [name_key]: this.state.name,
             email: this.state.email,
@@ -77,7 +77,7 @@ module.exports = React.createClass({
         }
         const activeCls = "btn btn-default active";
         const inactiveCls = "btn btn-default";
-        const nameLabel = this.state.type === "people" ? "Username" : "Mailing list name";
+        const nameLabel = this.state.type === common.contactType.person ? "Username" : "Mailing list name";
 
         let err = null;
         if (this.state.message) {
@@ -96,15 +96,15 @@ module.exports = React.createClass({
                 <Modal.Body>
 
                     <div className="btn-group" data-toggle="buttons">
-                        <label className={this.state.type === "people" ? activeCls : inactiveCls}>
+                        <label className={this.state.type === common.contactType.person ? activeCls : inactiveCls}>
                             <input type="radio" id="option1"
-                                onChange={() => this.setType('people')} />
+                                onChange={() => this.setType(common.contactType.person)} />
                             Person
                         </label>
 
-                        <label className={this.state.type === "mailing-lists" ? activeCls : inactiveCls}>
+                        <label className={this.state.type === common.contactType.mailingList ? activeCls : inactiveCls}>
                             <input type="radio" id="option2"
-                                onChange={() => this.setType('mailing-lists')} />
+                                onChange={() => this.setType(common.contactType.mailingList)} />
                             Mailing List
                         </label>
                     </div>

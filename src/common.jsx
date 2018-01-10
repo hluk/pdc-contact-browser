@@ -26,6 +26,13 @@ module.exports = {
     releaseComponentContacts: 'release-component-contacts/',
   },
 
+  // Identifiers for contact type; they should match the URL fragment used in
+  // the API
+  contactType: {
+    person: 'people',
+    mailingList: 'mailing-lists',
+  },
+
   // Default page size - affects number of items in the data table.
   default_page_size: 20,
 }
