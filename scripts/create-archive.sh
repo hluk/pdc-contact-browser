@@ -3,7 +3,7 @@
 set -euo pipefail
 
 name=pdc-contact-browser
-version=$(git describe --match="$name-*" | sed -e 's/'"$name"'-//' -e 's/-[0-9]\+//' -e 's/-/./g')
+version=$(./scripts/version.sh)
 archive_basename="$name-$version"
 archive="$archive_basename.tar.gz"
 root_dir="$archive_basename/var/www/html/$name"
