@@ -15,104 +15,89 @@ var classNames = require('classnames');
 
 var Layout = require('./Layout.jsx');
 
-// Makes asynchronous requests to get results from given resources.
-function fetchResults(app, data, resources, results = [], count = 0, showResults = true) {
+function updateStateAfterFetchContacts(app, state) {
+  var newState = Object.assign({
+    busy: false,
+    showresult: true,
+    page: parseInt(app.state.params.page),
+  }, state);
+
+  app.setState(newState, function() {
+      var params = app.state.params;
+      $('#component').val(params['component'] || '');
+      $('#role').val(params['role'] || 'all');
+    }
+  );
+}
+
+function displayFetchContactsError(app, xhr, status, err) {
+  app.displayError(app.state.url + common.resources.globalComponentContacts, 'GET', xhr, status, err);
+  app.refs.errorDialog.open();
+}
+
+// Makes asynchronous requests to get contacts.
+function fetchContactCount(app, data) {
   var request_data;
-  // Show results or update only item count.
-  if (showResults) {
-    request_data = data;
-  } else {
-    request_data = Object.assign({}, data);
-    request_data.page = 1;
-    request_data.page_size = 1;
-  }
+  request_data = Object.assign({}, data);
+  request_data.page = 1;
+  request_data.page_size = 1;
 
   $.ajax({
-    url: app.state.url + resources[0],
+    url: app.state.url + common.resources.globalComponentContacts,
     dataType: "json",
     data: request_data
   })
     .done(function (response) {
       var newResults = (response instanceof Array) ? response : response.results;
-      count += (response instanceof Array) ? newResults.length : response.count;
-
-      if (showResults) {
-        var remaining = app.state.page_size - results.length;
-        results = results.concat(newResults.slice(0, remaining));
-      }
-
-      resources.shift();
-
-      var newState = {
-        busy: resources.length > 0,
-        showresult: true,
-        data: results,
-        count: count,
-        page: parseInt(app.state.params.page),
-      };
-
-      app.setState(newState, function() {
-          var params = app.state.params;
-
-          $('#component').val(params['component'] || '');
-
-          if (params['release']) {
-            $('#release').val(params['release']);
-          } else if (app.state.resource === common.resources.globalComponentContacts) {
-            $('#release').val(common.values.releaseAllGlobal);
-          } else if (app.state.resource === common.resources.releaseComponentContacts) {
-            $('#release').val(common.values.releaseAllRelease);
-          } else {
-            $('#release').val(common.values.releaseAll);
-          }
-
-          $('#role').val(params['role'] || 'all');
-        }
-      );
-
-      if (resources.length > 0) {
-        // Concatenate results from next resource.
-        if (results.length < data.page_size) {
-          var currentPageCount = Math.ceil(count / app.state.page_size);
-          // With paging, it's not possible to request results from an offset,
-          // so first few items from resource can repeat on following page.
-          data.page = Math.max(1, data.page - currentPageCount);
-          fetchResults(app, data, resources, results, count, true);
-        } else {
-          // If there is no need to show rest of the items, do a request
-          // just to get an item count.
-          fetchResults(app, data, resources, results, count, false);
-        }
-      }
+      var count = (response instanceof Array) ? newResults.length : response.count;
+      var newState = {count: count};
+      updateStateAfterFetchResults(app, newState);
     })
     .fail(function (xhr, status, err) {
-      if (showResults && xhr.status === 404 && xhr.responseJSON) {
+      displayFetchContactsError(app, xhr, status, err);
+    });
+}
+
+// Makes asynchronous requests to get contacts.
+function fetchContacts(app, data) {
+  var request_data;
+  request_data = data;
+
+  $.ajax({
+    url: app.state.url + common.resources.globalComponentContacts,
+    dataType: "json",
+    data: request_data
+  })
+    .done(function (response) {
+      var newResults = (response instanceof Array) ? response : response.results;
+      var count = (response instanceof Array) ? newResults.length : response.count;
+      var results = newResults.slice(0, app.state.page_size);
+
+      var newState = {
+        data: results,
+        count: count,
+      };
+      updateStateAfterFetchContacts(app, newState);
+    })
+    .fail(function (xhr, status, err) {
+      if (xhr.status === 404 && xhr.responseJSON) {
         // If requested page does not exist, do a request just to get an
         // item count.
-        fetchResults(app, data, resources, results, count, false);
+        fetchContactCount(app, data);
       } else {
-        app.displayError(app.state.url + resources[0], 'GET', xhr, status, err);
-        app.refs.errorDialog.open();
+        displayFetchContactsError(app, xhr, status, err);
       }
     });
 }
 
 module.exports = React.createClass({
   getInitialState: function () {
-    var cached_releases = localStorage.getItem("releases");
     var cached_roles = localStorage.getItem("roles");
     var cached_contacts = localStorage.getItem("contacts");
-    var releases = [];
     var roles = [];
     var contacts = {};
-    var release_spinning = true;
     var role_spinning = true;
     var contact_spinning = true;
-
-    if (cached_releases) {
-      releases = cached_releases.split(",");
-      release_spinning = false;
-    }
 
     if (cached_roles) {
       roles = cached_roles.split(",");
@@ -127,7 +112,7 @@ module.exports = React.createClass({
       }
     }
 
-    var busy = !release_spinning && !role_spinning && !contact_spinning;
+    var busy = !role_spinning && !contact_spinning;
     var params = {};
     var resource= null;
     var location = document.location.toString();
@@ -156,10 +141,8 @@ module.exports = React.createClass({
       busy: busy,
       error: {},
       showresult: false,
-      releases: releases,
       roles: roles,
       contacts: contacts,
-      release_spinning: release_spinning,
       role_spinning: role_spinning,
       contact_spinning: contact_spinning,
       root: root,
@@ -196,18 +179,18 @@ module.exports = React.createClass({
         self.getInitialData(token);
       }
       if (self.state.resource) {
-        var allowed_params = ["component", "release", "role", "email", "page", "page_size"];
+        var allowed_params = ["component", "role", "email", "page", "page_size"];
         var params = Object.keys(self.state.params);
         for (var idx in params) {
           if ($.inArray(params[idx], allowed_params) < 0) {
-            throw "Input params should be in list 'component', 'release', 'role', 'email' or 'page'";
+            throw "Input params should be in list 'component', 'role', 'email' or 'page'";
           }
         }
         var page = 1;
         if (self.state.params['page']) {
           page = self.state.params['page'];
         }
-        self.setState({busy: true, page: Number(page), release_spinning: false, role_spinning: false, contact_spinning: false, showresult: true}, self.loadData);
+        self.setState({busy: true, page: Number(page), role_spinning: false, contact_spinning: false, showresult: true}, self.loadData);
       }
     }
 
@@ -252,22 +235,12 @@ module.exports = React.createClass({
         xhr.setRequestHeader('Authorization', 'Token ' + token);
       }
     });
-    var releases = [];
     var roles = [];
     var mailinglists = [];
     var people = [];
     var param = { 'page_size': -1 };
     var Url = localStorage.getItem('server');
     $.when(
-      $.getJSON(Url + "releases/", Object.assign(param, {fields: 'release_id'}))
-        .done(function (response) {
-          for (var idx in response) {
-            releases.push(response[idx].release_id)
-          }
-        })
-        .fail(function(jqxhr, textStatus, error) {
-          _this.errorAddress = Url + 'releases/';
-        }),
       $.getJSON(Url + "contact-roles/", Object.assign(param, {fields: 'name'}))
         .done(function (response) {
           for (var idx in response) {
@@ -297,19 +270,16 @@ module.exports = React.createClass({
       contacts["mail"] = mailinglists;
       contacts["people"] = people;
       _this.setState({busy: false,
-                    releases: releases,
                     roles: roles,
-                    release_spinning: false,
                     role_spinning: false,
                     contact_spinning: false,
                     contacts: contacts});
-      localStorage.setItem('releases', releases);
       localStorage.setItem('roles', roles);
       localStorage.setItem('contacts', JSON.stringify(contacts));
     })
     .fail(function(jqxhr, textStatus, error) {
       if (error === 'UNAUTHORIZED') {
-        _this.setState({ busy: true, release_spinning: false, role_spinning: false, contact_spinning: false });
+        _this.setState({ busy: true, role_spinning: false, contact_spinning: false });
         _this.getToken(_this.getInitialData);
       } else {
         _this.displayError(_this.errorAddress, 'GET', jqxhr, textStatus, error);
@@ -338,18 +308,6 @@ module.exports = React.createClass({
   },
   handleFormSubmit: function (data) {
     var params = {};
-    var resource = null;
-
-    if (data['release'] == common.values.releaseAll) {
-      resource = common.resources.allComponentContacts;
-    } else if (data['release'] == common.values.releaseAllGlobal) {
-      resource = common.resources.globalComponentContacts;
-    } else if (data['release'] == common.values.releaseAllRelease) {
-      resource = common.resources.releaseComponentContacts;
-    } else {
-      resource = common.resources.releaseComponentContacts;
-      params['release'] = data['release'];
-    }
 
     if (data['component']) {
       params['component'] = data['component'];
@@ -361,7 +319,12 @@ module.exports = React.createClass({
       params['email'] = data['contact'];
     }
 
-    this.setState({resource: resource, params: params, page: 1, showresult: true}, this.handlePageChange(1));
+    this.setState({
+      resource: common.resources.globalComponentContacts,
+      params: params,
+      page: 1,
+      showresult: true
+    }, this.handlePageChange(1));
   },
     updateData: function (event) {
       var availablePage = parseInt(this.state.params.page);
@@ -393,12 +356,7 @@ module.exports = React.createClass({
         newState.page_size = data.page_size;
       }
       this.setState(newState);
-
-      var resources = this.state.resource === common.resources.allComponentContacts
-        ? [common.resources.globalComponentContacts, common.resources.releaseComponentContacts]
-        : [this.state.resource];
-
-      fetchResults(this, data, resources);
+      fetchContacts(this, data);
     },
     handlePageChange: function (p) {
       var _this = this;
@@ -451,10 +409,18 @@ module.exports = React.createClass({
               overlayClass={overlayClass} error={this.state.error}
               onCreateNewContact={this.addContact}>
            <Col md={3} className="leftCol">
-             <LoadForm releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts} release_spinning={this.state.release_spinning} role_spinning={this.state.role_spinning} contact_spinning={this.state.contact_spinning} params={this.state.params} resource={this.state.resource} onSubmit={this.handleFormSubmit} inputChange={this.handleInputChange}/>
+             <LoadForm
+               roles={this.state.roles}
+               contacts={this.state.contacts}
+               role_spinning={this.state.role_spinning}
+               contact_spinning={this.state.contact_spinning}
+               params={this.state.params}
+               resource={this.state.resource}
+               onSubmit={this.handleFormSubmit}
+               inputChange={this.handleInputChange}/>
            </Col>
            <Col md={9} className="rightCol">
-             <TableToolbar showresult={this.state.showresult} releases={this.state.releases} roles={this.state.roles} contacts={this.state.contacts}
+             <TableToolbar showresult={this.state.showresult} roles={this.state.roles} contacts={this.state.contacts}
                selectedContact={this.state.selectedContact} clearSelectedContact={this.clearSelectedContact}/>
              <div id="browser-wrapper">
                <i className={browserSpinnerClass}></i>

@@ -12,7 +12,6 @@ module.exports = React.createClass({
       'message': '',
       'messageType': 'danger',
       'cmp': '',
-      'release': '',
       'contact': '',
       'initContact': '',
       'role': '',
@@ -28,7 +27,6 @@ module.exports = React.createClass({
       if (data === '') {
         _this.setState({
           'cmp': '',
-          'release': '',
           'contact': '',
           'role': '',
           'enableContactSelect': false,
@@ -39,7 +37,6 @@ module.exports = React.createClass({
       } else {
         _this.setState({
           'cmp': data.component,
-          'release': data.release,
           'contact': data.contact,
           'initContact': data.contact,
           'role': data.role,
@@ -86,7 +83,6 @@ module.exports = React.createClass({
       'showMessage': false,
       'message': '',
       'cmp': '',
-      'release': '',
       'contact': '',
       'initContact': '',
       'role': '',
@@ -145,18 +141,12 @@ module.exports = React.createClass({
     }
     var row = {
       'component': this.state.cmp,
-      'release': this.state.release,
       'contact': this.state.contact,
       'role': this.state.role
     };
     var data = {};
     data['role'] = row['role'];
-    if (row['release'] == 'N/A') {
-      data['component'] = row['component'];
-    }
-    else {
-      data['component'] = {'name': row['component'], 'release': row['release']};
-    }
+    data['component'] = row['component'];
     var arr = row['contact'].split('<');
     var name = arr[0].trim();
     var email = arr[1].replace('>', '').trim();
@@ -201,9 +191,6 @@ module.exports = React.createClass({
     if (this.props.roles[0] == "all") {
       this.props.roles.shift();
     }
-    if (this.props.releases[0] == "all") {
-      this.props.releases.shift();
-    }
 
     var mailinglists = this.props.contacts["mail"];
     var people = this.props.contacts["people"];
@@ -221,9 +208,6 @@ module.exports = React.createClass({
     var contactList = finalContact.map(function(contact) {
       return { 'value': contact, 'label': contact };
     });
-    var releaseList = this.props.releases.map(function(release) {
-      return { 'value': release, 'label': release };
-    });
     var roleList = this.props.roles.map(function(role) {
       return { 'value': role, 'label': role };
     });
@@ -231,16 +215,13 @@ module.exports = React.createClass({
     return (
       <div>
         <Row className="fieldsRow">
-          <Col md={3}>
+          <Col md={4}>
             <FormControl ref="cmp" type="text" placeholder="Component" value={this.state.cmp} disabled="true"/>
-          </Col>
-          <Col md={2}>
-            <FormControl ref="release" type="text" placeholder="Release" value={this.state.release} disabled="true"/>
           </Col>
           <Col md={5}>
             <Select ref="contact" placeholder="Contact" value={this.state.contact} clearable={false} options={contactList} disabled={!this.state.enableContactSelect} onChange={this.updateFieldContact}/>
           </Col>
-          <Col md={2}>
+          <Col md={3}>
             <Select placeholder="Role" value={this.state.role} clearable={false} options={roleList} disabled={!this.state.enableRoleSelect} onChange={this.updateFieldRole}/>
           </Col>
         </Row>

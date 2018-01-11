@@ -86,11 +86,11 @@ module.exports = React.createClass({
               </Nav>
               <Tab.Content animation className={this.state.panelClass}>
                 <Tab.Pane eventKey="new">
-                  <NewPane releases={this.props.releases} roles={this.props.roles} 
+                  <NewPane roles={this.props.roles}
                   contacts={this.props.contacts} hidePanel={this.hidePanel} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="edit">
-                  <EditPane releases={this.props.releases} roles={this.props.roles}
+                  <EditPane roles={this.props.roles}
                     contacts={this.props.contacts} hidePanel={this.hidePanel} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="delete">

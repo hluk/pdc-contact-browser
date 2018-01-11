@@ -39,9 +39,7 @@ module.exports = React.createClass({
                         <li><code>contacts/mailing-lists</code></li>
                         <li><code>contacts/people</code></li>
                         <li><code>global-components</code></li>
-                        <li><code>release-components</code></li>
                         <li><code>global-components-contacts</code></li>
-                        <li><code>release-components-contacts</code></li>
                     </ul>
 
                     <p>

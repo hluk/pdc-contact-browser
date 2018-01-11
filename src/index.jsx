@@ -35,9 +35,7 @@ var routeChange = function(prevState, nextState) {
 ReactDOM.render(
   <Router history={appHistory}>
     <Route path="/" component={ App } />
-    <Route path={"/" + common.resources.releaseComponentContacts} component={ App } onChange={routeChange} onEnter={performSearch} onLeave={returntoInitState}/>
     <Route path={"/" + common.resources.globalComponentContacts} component={ App } onChange={routeChange} onEnter={performSearch} onLeave={returntoInitState}/>
-    <Route path={"/" + common.resources.allComponentContacts} component={ App } onChange={routeChange} onEnter={performSearch} onLeave={returntoInitState}/>
   </Router>,
   document.getElementById('app')
 );

@@ -26,7 +26,6 @@ module.exports = React.createClass({
     e.preventDefault();
     var data = {
       'component': ReactDOM.findDOMNode(this.refs.component).value.trim(),
-      'release': $('input[name="query_release"]').val(),
       'role': $('input[name="query_role"]').val(),
       'contact': $('input[name="query_contact"]').val(),
     };
@@ -38,13 +37,6 @@ module.exports = React.createClass({
   },
 
   render: function () {
-    var releaseList = this.props.releases.map(function(release) {
-      return { 'value': release, 'label': release };
-    });
-    prependOption(releaseList, common.values.releaseAllRelease, common.labels.releaseAllRelease);
-    prependOption(releaseList, common.values.releaseAllGlobal, common.labels.releaseAllGlobal);
-    prependOption(releaseList, common.values.releaseAll, common.labels.releaseAll);
-
     var roleList = this.props.roles.map(function(role) {
       return { 'value': role, 'label': role };
     });
@@ -62,15 +54,6 @@ module.exports = React.createClass({
     var component = (this.props.params['component']) ? this.props.params['component']:"";
     $("#component").attr("value", component);
 
-    var initRelease = common.values.releaseAll;
-    if (this.props.resource == common.resources.globalComponentContacts) {
-      initRelease = common.values.releaseAllGlobal
-    } else if (this.props.params['release']) {
-      initRelease = this.props.params['release'];
-    } else if (this.props.resource == common.resources.releaseComponentContacts) {
-      initRelease = common.values.releaseAllRelease;
-    }
-
     var initRole = (this.props.params['role'])
           ? this.props.params['role']
           : common.values.rolesAll;
@@ -79,17 +62,9 @@ module.exports = React.createClass({
           ? this.props.params['email']
           : common.values.contactsAll;
 
-    var release_spinning = this.props.release_spinning;
     var role_spinning =  this.props.role_spinning;
     var contact_spinning =  this.props.contact_spinning;
 
-    var releaseSpinClass = classNames({
-      'fa': true,
-      'fa-refresh': true,
-      'fa-spin': true,
-      'loadingSpinner': true,
-      'hidden': !release_spinning
-    });
     var roleSpinClass = classNames({
       'fa': true,
       'fa-refresh': true,
@@ -113,13 +88,6 @@ module.exports = React.createClass({
               <div className="col-md-12">
                 <input type="text" className="form-control" id="component" ref="component" onChange={this.handleInputChange}/>
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="release" className="col-md-12">Release:</label>
-              <Col md={12}>
-                <Select name="query_release" value={initRelease} clearable={false} options={releaseList}/>
-                <i className={releaseSpinClass}></i>
-              </Col>
             </div>
             <div className="form-group">
               <label htmlFor="role" className="col-md-12">Contact Role:</label>

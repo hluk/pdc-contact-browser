@@ -14,7 +14,6 @@ module.exports = React.createClass({
       'message': '',
       'messageType': 'info',
       'cmp': '',
-      'release': '',
       'contact': '',
       'role': '',
       'enableSaveBtn': true
@@ -29,9 +28,6 @@ module.exports = React.createClass({
   updateCmp: function(event) {
     this.setState({ 'cmp': event.target.value.trim() });
   },
-  updateRelease: function(value) {
-    this.setState({ 'release': value.trim() });
-  },
   updateContact: function(value) {
     this.setState({ 'contact': value.trim() });
   },
@@ -39,7 +35,7 @@ module.exports = React.createClass({
     this.setState({ 'role': value.trim() });
   },
   restoreDefaults: function() {
-    this.setState({ 'cmp': '', 'release': '', 'contact': '', 'role': '', 'showMessage': false, 'message': '' });
+    this.setState({ 'cmp': '', 'contact': '', 'role': '', 'showMessage': false, 'message': '' });
   },
   closePane: function() {
     this.restoreDefaults();
@@ -61,7 +57,6 @@ module.exports = React.createClass({
     var _this = this;
     var newData = [
       { 'name': 'cmp', 'value': this.state.cmp },
-      { 'name': 'release', 'value': this.state.release },
       { 'name': 'contact', 'value': this.state.contact },
       { 'name': 'role', 'value': this.state.role }
     ];
@@ -87,21 +82,13 @@ module.exports = React.createClass({
     }
     var row = {
       'component': this.state.cmp,
-      'release': this.state.release,
       'contact': this.state.contact,
       'role': this.state.role
     };
     var data = {};
-    var url = localStorage.getItem('server');
+    var url = localStorage.getItem('server') + common.resources.globalComponentContacts;
     data["role"] = row["role"];
-    if (row["release"] == "global") {
-      data["component"] = row["component"];
-      url = url + common.resources.globalComponentContacts;
-    }
-    else {
-      data["component"] = {"name": row["component"], "release": row["release"]};
-      url = url + common.resources.releaseComponentContacts;
-    }
+    data["component"] = row["component"];
     var arr = row["contact"].split("<");
     var name = arr[0].trim();
     var email = arr[1].replace(">", "").trim();
@@ -147,9 +134,6 @@ module.exports = React.createClass({
     if (this.props.roles[0] == "all") {
       this.props.roles.shift();
     }
-    if (this.props.releases[0] == "all") {
-      this.props.releases.shift();
-    }
 
     var mailinglists = this.props.contacts["mail"];
     var people = this.props.contacts["people"];
@@ -167,9 +151,6 @@ module.exports = React.createClass({
     var contactList = finalContact.map(function(contact) {
       return { 'value': contact, 'label': contact };
     });
-    var releaseList = this.props.releases.map(function(release) {
-      return { 'value': release, 'label': release };
-    });
     var roleList = this.props.roles.map(function(role) {
       return { 'value': role, 'label': role };
     });
@@ -177,16 +158,13 @@ module.exports = React.createClass({
     return (
       <div>
         <Row className="fieldsRow">
-          <Col md={3}>
+          <Col md={4}>
             <FormControl type="text" value={this.state.cmp} placeholder="Component" onChange={this.updateCmp} />
-          </Col>
-          <Col md={2}>
-            <Select placeholder="Release" name="field_release" value={this.state.release} clearable={false} options={releaseList} onChange={this.updateRelease}/>
           </Col>
           <Col md={5}>
             <Select placeholder="Contact" value={this.state.contact} clearable={false} options={contactList} onChange={this.updateContact}/>
           </Col>
-          <Col md={2}>
+          <Col md={3}>
             <Select placeholder="Role" value={this.state.role} clearable={false} options={roleList} onChange={this.updateRole}/>
           </Col>
         </Row>
