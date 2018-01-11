@@ -9,22 +9,29 @@ var Row = ReactBootstrap.Row;
 var HeaderLinks = require('./HeaderLinks.jsx');
 var NetworkErrorDialog = require('./NetworkErrorDialog.jsx');
 var NewContactDialog = require('./NewContactDialog.jsx');
+var PermissionDialog = require('./PermissionDialog.jsx');
 var Footer = require('./Footer.jsx');
+
+const Modal = Object.freeze({
+    NONE: 0,
+    NEW_CONTACT: 1,
+    PERMISSIONS: 2
+});
 
 module.exports = React.createClass({
     getInitialState() {
         return {
-            newContact: false,
+            modal: Modal.NONE,
         };
     },
 
-    displayNewContactDialog(e) {
+    displayModal(e, m) {
         e.preventDefault();
-        this.setState({newContact: true});
+        this.setState({modal: m});
     },
 
-    hideNewContactDialog() {
-        this.setState({newContact: false});
+    hideModal() {
+        this.setState({modal: Modal.NONE});
     },
 
     render() {
@@ -41,7 +48,8 @@ module.exports = React.createClass({
                 <HeaderLinks links={this.props.links} />
                 <ul className="nav navbar-nav navbar-primary">
                     <li><a href="/">Contact Browser</a></li>
-                    <li><a href="#" onClick={this.displayNewContactDialog}>Create New Contact</a></li>
+                    <li><a href="#" onClick={e => this.displayModal(e, Modal.NEW_CONTACT)}>Create New Contact</a></li>
+                    <li><a href="#" onClick={e => this.displayModal(e, Modal.PERMISSIONS)}>Permissions</a></li>
                 </ul>
             </div>
           </nav>
@@ -51,9 +59,11 @@ module.exports = React.createClass({
             </Row>
             <div className={this.props.overlayClass}></div>
             <NetworkErrorDialog ref='errorDialog' data={this.props.error} />
-            <NewContactDialog show={this.state.newContact}
-                onClose={this.hideNewContactDialog}
+            <NewContactDialog show={this.state.modal === Modal.NEW_CONTACT}
+                onClose={this.hideModal}
                 onCreateNewContact={this.props.onCreateNewContact} />
+            <PermissionDialog show={this.state.modal === Modal.PERMISSIONS}
+                onClose={this.hideModal} />
           </div>
           <Footer />
         </div>
