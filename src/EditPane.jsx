@@ -245,14 +245,14 @@ module.exports = React.createClass({
           </Col>
         </Row>
         <Row className="btnsRow">
-          <Col md={10}>
+          <Col md={8}>
             <Fade in={this.state.showMessage}>
               <Alert bsStyle={this.state.messageType}>
                 {this.state.message}
               </Alert>
             </Fade>
           </Col>
-          <Col md={2}>
+          <Col md={4}>
             <ButtonGroup bsSize="small" justified>
               <Button href="#" bsStyle="success" onClick={this.updateContact} disabled={!this.state.enableSaveBtn}>Save</Button>
               <Button href="#" onClick={this.closePane}>Cancel</Button>
