@@ -17,7 +17,7 @@ start: $(NPM) node_modules
 $(NPM):
 	sudo dnf install npm
 
-node_modules:
+node_modules: package.json
 	$(NPM) install
 
 # Update version in spec file and package.json to match current git commit.
