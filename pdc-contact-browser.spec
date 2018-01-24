@@ -1,5 +1,5 @@
 Name:           pdc-contact-browser
-Version:        1.2.0
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Web UI for pdc's contact
 Group:          Development/Libraries
@@ -22,6 +22,41 @@ cp -R var/ %{buildroot}/
 /var/www/html/%{name}
 
 %changelog
+* Wed Jan 24 2018 Lubomír Sedlář <lsedlar@redhat.com> 2.0.0-1
+- Bump version (lsedlar@redhat.com)
+- Fix vulnerable dependency (lholecek@redhat.com)
+- Update npm modules when package.json changes (lholecek@redhat.com)
+- Remove support for release components (lholecek@redhat.com)
+- Fix tab panel layout sizes (lholecek@redhat.com)
+- Add permission information (lsedlar@redhat.com)
+- Fix archive name (lholecek@redhat.com)
+- Allow updating version using Makefile (lholecek@redhat.com)
+- Fix contact type identifiers (lsedlar@redhat.com)
+- Make "Create New Contact" text consistent (lholecek@redhat.com)
+- Add footer showing application version (lholecek@redhat.com)
+- Add form for creating new contacts (lsedlar@redhat.com)
+- Set header style without delay (lholecek@redhat.com)
+- Remove user configuration from repo (lholecek@redhat.com)
+- Load username and mail name (lsedlar@redhat.com)
+- Optimize queries to fill filter popups (lholecek@redhat.com)
+- Fix caching contacts (lholecek@redhat.com)
+- Create assets archive for packaging (lholecek@redhat.com)
+- Fix webpack prod config (lsedlar@redhat.com)
+- Increase page size to 20 (lsedlar@redhat.com)
+- Revert "Add assets for packaging." (lholecek@redhat.com)
+- Fix whitespace in changelog (lholecek@redhat.com)
+- Add url-loader dev dependency (lsedlar@redhat.com)
+- Add documentation for customization to README (lsedlar@redhat.com)
+- Use PatternFly for menu (lsedlar@redhat.com)
+- Add optional links to top right corner (lsedlar@redhat.com)
+- Allow overriding visual look in server settings (lsedlar@redhat.com)
+- Add contact filter (lholecek@redhat.com)
+- Allow searching for global and release components (lholecek@redhat.com)
+- Bump uglify-js version (lholecek@redhat.com)
+- Fix updating contacts for global components (lholecek@redhat.com)
+- Change README.markdown as serversetting.json location changed
+  (chuzhang@redhat.com)
+
 * Thu Dec 22 2016 Chuang Zhang <chuzhang@redhat.com> 1.2.0-1
 - new package built with tito
 - fix bugs
