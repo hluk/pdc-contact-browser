@@ -47,7 +47,7 @@ module.exports = React.createClass({
             <div className="navbar-collapse collapse">
                 <HeaderLinks links={this.props.links} />
                 <ul className="nav navbar-nav navbar-primary">
-                    <li><a href="/">Contact Browser</a></li>
+                    <li><a href="#">Contact Browser</a></li>
                     <li><a href="#" onClick={e => this.displayModal(e, Modal.NEW_CONTACT)}>Create New Contact</a></li>
                     <li><a href="#" onClick={e => this.displayModal(e, Modal.PERMISSIONS)}>Permissions</a></li>
                 </ul>
