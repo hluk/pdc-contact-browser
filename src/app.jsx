@@ -250,14 +250,14 @@ module.exports = React.createClass({
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contact-roles/';
         }),
-      $.getJSON(Url + "contacts/mailing-lists/", Object.assign(param, {fields: 'email,mail_name'}))
+      $.getJSON(Url + "contacts/mailing-lists/", $.param(Object.assign(param, {fields: ['email', 'mail_name']}), true))
         .done(function (response) {
           mailinglists = response;
         })
         .fail(function(jqxhr, textStatus, error) {
           _this.errorAddress = Url + 'contacts/mailing-lists/';
         }),
-      $.getJSON(Url + "contacts/people/", Object.assign(param, {fields: 'email,username'}))
+      $.getJSON(Url + "contacts/people/", $.param(Object.assign(param, {fields: ['email', 'username']}), true))
         .done(function (response) {
           people = response;
         })
